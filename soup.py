@@ -7,8 +7,7 @@ text = url.read()
 soup = BeautifulSoup(text)
  
 tables = soup.find_all('table')
-horna_table = str(tables[1])
-hornasoup = BeautifulSoup(horna_table) 
+hornasoup = BeautifulSoup(str(tables[1])) 
 
 trs = hornasoup.find_all('tr')
 
@@ -22,8 +21,7 @@ for i in range (1,trs.__len__()):
     print bettermatch[0]
 
 
-dolna_table = str(tables[2])
-dolnasoup = BeautifulSoup(dolna_table) 
+dolnasoup = BeautifulSoup(str(tables[2])) 
 trs_dolna = dolnasoup.find_all('tr')
 
 for i in range (1,trs_dolna.__len__()):        
