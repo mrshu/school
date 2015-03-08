@@ -14,7 +14,7 @@ void *read_to_buff(void *data){
     char c;
     while(bool == 1){
         if( (poread-powrite) == 100){ 
-            sleep(0.1); // nahradit  za wait();
+            sleep(0.01); // nahradit  za wait();
             }
         scanf ("%c",&c);  
         pthread_mutex_lock(&lock);
@@ -28,14 +28,14 @@ void *read_to_buff(void *data){
 void *print_from_buff(void *data){
     char c;
     while(bool == 1){
-        if( powrite == poread) { sleep(0.1);
+        if( powrite == poread) { sleep(0.01);
                     }   
         else{
             pthread_mutex_lock(&lock);
             c = buff[powrite % 100];
             powrite+= 1;
-            printf("%c",c); 
             pthread_mutex_unlock(&lock);
+            printf("%c",c); 
             }
         }
     }
