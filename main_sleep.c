@@ -13,7 +13,7 @@ int bool;
 void *read_to_buff(void *data){
     char c;
     while(bool == 1){
-        if( (poread-powrite) == 100){ // ak uz je read moc popredu zaspi
+        if( (poread-powrite) == 100){ 
             sleep(0.1); // nahradit  za wait();
             }
         scanf ("%c",&c);  
