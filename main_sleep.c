@@ -34,8 +34,8 @@ void *print_from_buff(void *data){
             pthread_mutex_lock(&lock);
             c = buff[powrite % 100];
             powrite+= 1;
-            printf("%c",c); 
             pthread_mutex_unlock(&lock);
+            printf("%c",c); 
             }
         }
     }
