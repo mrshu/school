@@ -183,7 +183,7 @@ public class Main {
                 data.dispose();
                 try {
                     Scanner scan = new Scanner(file).useLocale(Locale.ENGLISH);
-                    while(scan.hasNextLine()){
+                    while(scan.hasNextLine() && scan.hasnext() ){
                         String co = scan.next();
                         switch (co){
                             case "v": 
