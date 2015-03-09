@@ -5,23 +5,26 @@
 using namespace std;
 
 pthread_mutex_t lock = PTHREAD_MUTEX_INITIALIZER;
-char buff[100]; //buffer
+const  int buff_size = 100; 
+char buff[buff_size]; //buffer
 int poread ;
 int powrite;
 bool done = false;
+//int counter = 0; //counter can be used to see how many times sleep was called
 
 void *read_to_buff(void *data){
     char c;
     while(true){
-        if( (poread-powrite) == 100){ // ak uz je read moc popredu zaspi
+        if( (poread-powrite) == buff_size){ // buffer full
             sleep(0.01); 
+            //counter++;
             }
         else {
          if (scanf ("%c",&c) == EOF) 
-                {done = true; // ak uz nic nenacita skonci
+                {done = true; 
                 return NULL;    }
         pthread_mutex_lock(&lock);
-        buff[poread % 100] = c;
+        buff[poread % buff_size] = c;
         poread+= 1;
         pthread_mutex_unlock(&lock);  
         }
@@ -31,12 +34,13 @@ void *read_to_buff(void *data){
 void *print_from_buff(void *data){
     char c;
     while(true){
-        if(powrite==poread && done == true){return NULL;}
-        if( powrite == poread) { sleep(0.01);
+        if(powrite==poread && done == true){return NULL;} 
+        if( powrite == poread) { sleep(0.01); // buffer empty
+                   // counter++;
                     }   
         else{
             pthread_mutex_lock(&lock);
-            c = buff[powrite % 100];
+            c = buff[powrite % buff_size];
             powrite+= 1;
             printf("%c",c); 
             pthread_mutex_unlock(&lock);
@@ -58,6 +62,7 @@ int main(int argc, char** argv) {
    pthread_cancel(reader);
    pthread_cancel(printer);
    pthread_mutex_destroy( &lock);
+  // printf("%d",counter); 
     return 0;
 }
 
