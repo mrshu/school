@@ -5,22 +5,23 @@
 using namespace std;
 
 pthread_mutex_t lock = PTHREAD_MUTEX_INITIALIZER;
-const  int buff_size = 100; 
+const  int buff_size = 1000; 
 char buff[buff_size]; //buffer
 int poread ;
 int powrite;
 bool done = false;
-//int counter = 0; //counter can be used to see how many times sleep was called
+//int counter = 0; //counter can be used to see how many times yield was called
 
 void *read_to_buff(void *data){
     char c;
     while(true){
         if( (poread-powrite) == buff_size){ // buffer full
-            sleep(0.01); 
-            //counter++;
+                  pthread_yield();
+  //          counter++;
             }
         else {
-         if (scanf ("%c",&c) == EOF) 
+            c = getchar();
+         if (c == EOF) 
                 {done = true; 
                 return NULL;    }
         pthread_mutex_lock(&lock);
@@ -35,14 +36,14 @@ void *print_from_buff(void *data){
     char c;
     while(true){
         if(powrite==poread && done == true){return NULL;} 
-        if( powrite == poread) { sleep(0.01); // buffer empty
-                   // counter++;
+        if( powrite == poread) { pthread_yield(); // buffer empty
+    //                counter++;
                     }   
         else{
             pthread_mutex_lock(&lock);
             c = buff[powrite % buff_size];
             powrite+= 1;
-            printf("%c",c); 
+            putchar(c);
             pthread_mutex_unlock(&lock);
             }
         }
