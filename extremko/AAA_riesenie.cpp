@@ -1,3 +1,5 @@
+// WARNING troll programming
+
 #include <iostream>
 #include <sstream>
 #include <string>
