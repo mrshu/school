@@ -1,10 +1,12 @@
+// potato programming
+
 #include <iostream>
 #include <sstream>
 #include <string>
 
 using namespace std;
 
-//#include "riesenie.h"
+#include "riesenie.h"
 
 #if !defined( _RIESENIE_H_ )
 #define _RIESENIE_H_
@@ -26,12 +28,13 @@ const string ZLY_VYRAZ = "Zly vstupny vyraz";
 
 string RIMSKA_KALKULACKA::kalkulackaRimska(const string &vyr) {
     string vyr1 = "";
-    char op = 'K';
+    char op = 'N';
     string vyr2= "";
     bool sec = false;
     for(int i = 0; i< vyr.length(); i++){
         if (vyr.at(i)== ' ') {continue;}
         if (vyr.at(i) == '+'||  vyr.at(i) == '-' || vyr.at(i) == '/' || vyr.at(i) == '*' ){
+            if (sec == true){return ZLY_VYRAZ;}
             op = vyr.at(i);
             sec = true;
             continue;
@@ -48,8 +51,11 @@ string RIMSKA_KALKULACKA::kalkulackaRimska(const string &vyr) {
             }
         else{ return ZLY_VYRAZ;}
         }
+    if (sec == false){return ZLY_VYRAZ;}
     int cis1= konverziaRimskych(vyr1);
+    if (cis1 == 0 ){return ZLY_VYRAZ; }
     int cis2=konverziaRimskych(vyr2);
+    if (cis2 == 0 ){return ZLY_VYRAZ; }
     int result = kalkulackaArabska(op,cis1,cis2);
     string toret = konvertNaRimske(result);
   return toret;
