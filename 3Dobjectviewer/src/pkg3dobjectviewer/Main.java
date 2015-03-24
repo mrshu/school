@@ -21,8 +21,6 @@ import javax.swing.SwingUtilities;
 
 
 public class Main {
-
-    
     public static void main(String[] args) {
         SwingUtilities.invokeLater(new Runnable() {
 
@@ -34,8 +32,6 @@ public class Main {
         });
     }    
 }
-
-
 
  class MyFrame extends JFrame {
    Data data;
@@ -58,8 +54,9 @@ public class Main {
    JButton rotmx;
    JButton plusscale;
    JButton minusscale;
+   JButton unhide;
   
-   
+  
    MyFrame(){
         super("3Dviewer");
         this.setSize(1200, 700);
@@ -83,19 +80,37 @@ public class Main {
         render.setSize(100, 50);
         render.setLocation(850, 150);
         this.add(render);
+        final JTextField fieldR = new JTextField("R");
+        final JTextField fieldG = new JTextField("G");
+        final JTextField fieldB = new JTextField("B");
+        fieldR.setSize(100, 20);
+        fieldG.setSize(100, 20);
+        fieldB.setSize(100, 20);
+        fieldR.setLocation(960, 150);
+        fieldG.setLocation(960, 170);
+        fieldB.setLocation(960, 190);
+        this.add(fieldR);
+        this.add(fieldG);
+        this.add(fieldB);
+        
         
         hide = new JButton("Hide");
         hide.setSize(100, 50);
         hide.setLocation(850, 250);
         this.add(hide);
         
+        unhide = new JButton("Unhide");
+        unhide.setSize(100, 50);
+        unhide.setLocation(970, 250);
+        this.add(unhide);
+        
         light = new JButton("Light");
         light.setSize(100, 50);
         light.setLocation(850, 350);
         this.add(light);
-        JTextField fieldx = new JTextField("X");
-        JTextField fieldy = new JTextField("Y");
-        JTextField fieldz = new JTextField("Z");
+        final JTextField fieldx = new JTextField("X");
+        final JTextField fieldy = new JTextField("Y");
+        final JTextField fieldz = new JTextField("Z");
         fieldx.setSize(100, 20);
         fieldy.setSize(100, 20);
         fieldz.setSize(100, 20);
@@ -162,11 +177,11 @@ public class Main {
         
         plusscale = new JButton("+");
         plusscale.setSize(80, 50);
-        plusscale.setLocation(1000, 200);
+        plusscale.setLocation(1000, 50);
         this.add(plusscale);
         minusscale = new JButton("-");
         minusscale.setSize(80, 50);
-        minusscale.setLocation(1090, 200);
+        minusscale.setLocation(1090, 50);
         this.add(minusscale);
         
         
@@ -183,7 +198,7 @@ public class Main {
                 data.dispose();
                 try {
                     Scanner scan = new Scanner(file).useLocale(Locale.ENGLISH);
-                    while(scan.hasNextLine() && scan.hasnext() ){
+                    while(scan.hasNextLine() && scan.hasNext()){
                         String co = scan.next();
                         switch (co){
                             case "v": 
@@ -215,82 +230,89 @@ public class Main {
         render.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent event) {
+                int R = Integer.parseInt(fieldR.getText());
+                int G = Integer.parseInt(fieldG.getText());
+                int B = Integer.parseInt(fieldB.getText());
+                data.render(R, G, B);
                 repaint();
             }
         });
-        
-        
         
         light.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent event) {
+                int x = Integer.parseInt(fieldx.getText());
+                int y = Integer.parseInt(fieldy.getText());
+                int z = Integer.parseInt(fieldz.getText());
+                Point tosend = new Point(x,y,z);
+                data.setlight(tosend);
                 repaint();
             }
         });
-        
-        
-        
+                      
         hide.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent event) {
+                data.hide();
                 repaint();
             }
         });
         
-        
+        unhide.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent event) {
+                data.unhide();
+                repaint();
+            }
+        });
+            
         plusx.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent event) {
-                data.translate(1, 1);
+                data.translate(1, (float) 0.1);
                 repaint();
             }
         });
-        
         
         minusx.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent event) {
-                data.translate(1, 0);
+                data.translate(1, (float) -0.1);
                 repaint();
             }
         });
-        
         
         plusy.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent event) {
-                data.translate(2, 0);
+                data.translate(2, (float) 0.1);
                 repaint();
             }
         });
-        
         
         minusy.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent event) {
-                data.translate(2, 1);
+                data.translate(2,(float) -0.1);
                 repaint();
             }
         });
-        
         
         plusz.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent event) {
-                data.translate(3, 1);
+                data.translate(3,(float) 0.1);
                 repaint();
             }
         });
-        
         
         minusz.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent event) {
-                data.translate(3, 0);
+                data.translate(3, (float) -0.1);
                 repaint();
             }
         });
-        
         
         rotpz.addActionListener(new ActionListener() {
             @Override

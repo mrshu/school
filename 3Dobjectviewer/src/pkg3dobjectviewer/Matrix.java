@@ -16,6 +16,7 @@ public class Matrix {
                 }
             }
     }
+    
     Matrix(float x, float y, float z){
         this.array = new float[4][4];
         for(int i = 0; i < 4;i++){
@@ -32,7 +33,10 @@ public class Matrix {
    public void setsomething(int row, int col, float val ){
         this.array[row][col] = val;
    }
-   //**mat2 is umltiplied by matrix, on which function si called.**//
+
+   /**
+     * input matrix is multiplied by matrix, on which function is called.
+     */
    Matrix multiply( Matrix mat2){
        float[][] toret = new float[array.length][array.length];
        for(int i = 0; i < array.length; i++ ){
