@@ -1,0 +1,99 @@
+ 
+#include <iostream>
+#include <cstring>
+#include <string>
+
+#if !defined( _RIESENIE_H_ )
+#define _RIESENIE_H_
+
+#include <iostream>
+#include <cstring>
+#include <string>
+
+
+using namespace std;
+string konvertNaRimske(int cislo);
+
+const bool DUMMY_BOOL = false;
+const int DUMMY_INT = 0;
+const string DUMMY_STRING = "";
+
+const string CISLO_MIMO = "Cislo mimo povolenych hodnot";
+#endif
+
+#define odcitaj(kolko,Rimska,out) for (int ts = kolko; cislo >= ts; cislo -= kolko) {out = out + Rimska;}
+
+#define special(kolko,Rimska,out)   if (cislo >= kolko) {  out = out + Rimska;   cislo -= kolko;}
+
+using namespace std;
+
+
+string konvertNaRimske(int cislo) {
+  if(cislo<=-4000000000l || cislo>=4000000000l){
+      return CISLO_MIMO;
+  }
+  
+  string out = "";
+  
+  if (cislo == 0) {
+    return "O";
+  }
+  
+  odcitaj(1000000000, "G", out);
+  special(900000000, "EG",out);
+  
+  odcitaj(500000000, "F", out);
+  special(400000000, "EF",out);
+  
+  odcitaj(100000000, "E", out);
+  special(90000000, "YE",out);
+  
+  odcitaj(50000000, "Z", out);
+  special(40000000, "YZ",out);
+  
+  odcitaj(10000000, "Y", out);
+  special(9000000, "UY",out);
+  
+  odcitaj(5000000, "W", out);
+  special(4000000, "UW",out);
+  
+  odcitaj(1000000, "U", out);
+  special(900000, "SU",out);
+  
+  odcitaj(500000, "T", out);
+  special(400000, "ST",out);
+  
+  odcitaj(100000, "S", out);
+  special(90000, "QS",out);
+  
+  odcitaj(50000, "R", out);
+  special(40000, "QR",out);
+  
+  odcitaj(10000, "Q", out);
+  special(9000, "MQ",out);
+  
+  odcitaj(5000, "P", out);
+  special(4000, "MP",out);
+  
+  odcitaj(1000, "M", out);
+  special(900, "CM",out);
+  
+  odcitaj(500, "D", out);
+  special(400, "CD",out);
+  
+  odcitaj(100, "C", out);
+   special(90, "XC",out);
+
+  odcitaj(50, "L", out);
+   special(40, "XL",out);
+  
+  odcitaj(10, "X", out);
+   special(9, "IX",out);
+  
+  odcitaj(5, "V", out);
+   special(4, "IV",out);
+
+  odcitaj(1, "I", out);
+  
+  return out;
+}
