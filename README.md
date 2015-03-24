@@ -1,1 +1,1 @@
-# school
+Just a repository for some school projects and homework, so i can acces it anywhere or send it to classmates.
