@@ -1,5 +1,5 @@
 
-// aktualne sa finalne riesenie este rafaktoruje na "lepsiu" podobu
+// troll program for subject extreme programming
 
 #include <iostream>
 #include <sstream>
