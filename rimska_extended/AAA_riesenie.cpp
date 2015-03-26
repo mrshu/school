@@ -36,20 +36,25 @@ string RIMSKA_KALKULACKA::kalkulackaRimska(const string &vyr) {
     bool found_operator = false;
     bool zap_1 = false;
     bool zap_2 = false;
-    bool got_first = false;
+    bool got_first_letter = false;
     for(int i = 0; i< vyr.length(); i++){
-        if (vyr.at(i)== ' ') {continue;}
-        if ( vyr.at(i) == '-'  && got_first == false && zap_1 == false ){ zap_1 = true;  continue; }
-        //TODO dalsie operatory
-        if (vyr.at(i) == '+'||  vyr.at(i) == '-' || vyr.at(i) == '/' || vyr.at(i) == '*' || vyr.at(i) == '>'  || vyr.at(i) == '<' || vyr.at(i) == '=' || vyr.at(i) == '&' || vyr.at(i) == '|'     ){
-            if (found_operator == true){return ZLY_VYRAZ;}
+        if (vyr.at(i)== ' ') {continue;} 
+        
+        if ( vyr.at(i) == '-'  && got_first_letter == false && zap_1 == false ){ zap_1 = true;  continue; } 	//chcecks - of  first argument
+        if ( vyr.at(i) == '-'  && got_first_letter == false && zap_1 == true  ){ return ZLY_VYRAZ;  } 		// checks -- of first argument 
+        if ( vyr.at(i) == '-'  && found_operator == true && zap_2 == false) {zap_2 = true;  continue; }		// checks - of  second argument
+	if ( vyr.at(i) == '-'  &&  zap_2 == true  ){ return ZLY_VYRAZ;  } 					// chcecks -- of second argument  
+	
+        if (vyr.at(i) == '+'||  vyr.at(i) == '-' || vyr.at(i) == '/' || vyr.at(i) == '*' || vyr.at(i) == '>'  || vyr.at(i) == '<' || vyr.at(i) == '=' || vyr.at(i) == '&' || vyr.at(i) == '|'){
+	    if (got_first_letter == false){return ZLY_VYRAZ} 							// checks for existence of first argument
+            if (found_operator == true){return ZLY_VYRAZ;}							// checks for double argument
             op = vyr.at(i);
             found_operator = true;
-            got_first = true;
             continue;
             }
-        if ( vyr.at(i) == '-'  && got_first == true && zap_2 == false ){ zap_2 = true; continue;   }
+             
         if ( vyr.at(i) == 'I' || vyr.at(i) == 'V' || vyr.at(i) == 'X' || vyr.at(i) == 'L'  || vyr.at(i) == 'C'  || vyr.at(i) == 'D'  || vyr.at(i) == 'M' || vyr.at(i) == 'P' || vyr.at(i) == 'Q' || vyr.at(i) == 'R' || vyr.at(i) == 'S' || vyr.at(i) == 'T' || vyr.at(i) == 'U' || vyr.at(i) == 'W'|| vyr.at(i) == 'Y' || vyr.at(i) == 'Z'|| vyr.at(i) == 'E' || vyr.at(i) == 'F' || vyr.at(i) == 'G')  {
+	    got_first_letter =true;
             stringstream ss;
             char c;
             string  str;
@@ -61,19 +66,32 @@ string RIMSKA_KALKULACKA::kalkulackaRimska(const string &vyr) {
             }
         else{ return ZLY_VYRAZ;}
         }
+        
+    // TODO -------------------------------------------------
+    // check corectness of roman number
+    char last = 'A';
+    int streak = 0;
+    for(int i = 0 ; i<vyr1.length(); i++){
+      
+    }
+    for(int i = 0 ; i<vyr2.length(); i++){
+      
+    }
+    // -------------------------------------------------
     if (found_operator == false){return ZLY_VYRAZ;}
     int cis1= konverziaRimskych(vyr1);
     if (zap_1 == true) {cis1 = -cis1; }
     int cis2=konverziaRimskych(vyr2);
     if (zap_2 == true) {cis2 = -cis2; }
+    if (cis2 == 0 && op = '/'){ return CISLO_MIMO; }
     int result = kalkulackaArabska(op,cis1,cis2);
     string toret = konvertNaRimske(result);
   return toret;
 }
+
 int RIMSKA_KALKULACKA::konverziaRimskych(const string &rimskeCislo) {
-
+  //TODO sum of roman literals
   return DUMMY_INT;
-
 }
 
 
@@ -153,5 +171,20 @@ int RIMSKA_KALKULACKA::kalkulackaArabska(char oper, int op1, int op2) {
     if(oper == '-'){ return (op1 - op2) ;}
     if(oper == '*'){ return (op1 * op2) ;}
     if(oper == '/'){ return (op1 / op2) ;}
+    if(oper == '>'){ 
+	if (op1 > op2) { return 1;}
+	else 	{ return 0;}
+	}
+    if(oper == '<'){ 
+	if (op1 < op2) { return 1;}
+	else 	{ return 0;}
+	}
+    if(oper == '='){ 
+	if (op1 == op2) { return 1;}
+	else 	{ return 0;}
+	}
+	
+    if(oper == '&'){ return 0 ;} // output should be 1 or 0 for any number, WTF?
+    if(oper == '|'){ return 1 ;} // 
   return DUMMY_INT;
 }
