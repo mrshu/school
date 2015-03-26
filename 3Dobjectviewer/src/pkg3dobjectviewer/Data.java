@@ -16,6 +16,7 @@ public class Data {
     HashMap<Integer, Point> body;
     ArrayList<ArrayList<Integer>> plochy;
     ArrayList<Color> shades;
+    ArrayList<Color> originalCol;
     float posx;
     float posy;
     float posz;
@@ -31,6 +32,7 @@ public class Data {
         body = new HashMap<Integer, Point>();
         plochy = new ArrayList<ArrayList<Integer>>();
         shades = new ArrayList<Color>();
+        originalCol = new ArrayList<Color>();
         posx = 0;
         posy = 0;
         posz = 0;
@@ -45,6 +47,7 @@ public class Data {
         plochy.add(list);
         planes++;
         shades.add(cl);
+        originalCol.add(cl);
     }
 
     public Point getPoints(int key) {
@@ -56,7 +59,8 @@ public class Data {
     }
 
     public Color getPlaneColor(int i) {
-        return shades.get(i);
+        if (elight == false){return this.originalCol.get(i);}
+        else {return shades.get(i);}
     }
 
     public int numofPoints() {
@@ -73,6 +77,7 @@ public class Data {
         if (hides == false) {
             hide();
         }
+        int i = 0;
         for(ArrayList<Integer> indexy : plochy){         
             ArrayList<Point> body = new ArrayList<Point>();
             for(int j = 0 ; j< indexy.size(); j++){
@@ -88,11 +93,41 @@ public class Data {
                            vectorA[2]*vectorB[0] - vectorA[0]*vectorB[2] ,
                            vectorA[0]*vectorB[1] - vectorA[1]*vectorB[0]     };
         float tonorm = (float) Math.sqrt(normal[0]*normal[0] + normal[1]*normal[1]+normal[2]*normal[2]);
+        normal[0] = normal[0]/tonorm;
+        normal[1] = normal[1]/tonorm;
+        normal[2] = normal[2]/tonorm;
+      //  System.out.println(normal[0]+" "+ normal[1] + " "+ normal[2]);
+         float lightvector[] = new float[3]; 
+         lightvector[0] = p0.x-light.x;
+         lightvector[1] = p0.y - light.y;
+         lightvector[2] = p0.z - light.z;
+         tonorm = (float) Math.sqrt(lightvector[0]*lightvector[0] + lightvector[1]*lightvector[1]+lightvector[2]*lightvector[2]);
+         lightvector[0] = p0.x-light.x/tonorm;
+         lightvector[1] = p0.y - light.y/tonorm;
+         lightvector[2] = p0.z - light.z/tonorm;
+        // System.out.println(lightvector[0]+" "+ lightvector[1] + " "+ lightvector[2]);
+         float x = normal[0]*lightvector[0] + normal[1]*lightvector[1] +  normal[2]*lightvector[2] ;
+       //  System.out.println(x);
+         int r = (int) (this.originalCol.get(i).getRed()*x);
+         int g = (int) (this.originalCol.get(i).getGreen()*x);
+         int b = (int) (this.originalCol.get(i).getBlue()*x);
+         if (r < 0){r = 0;}
+         if (g < 0){g = 0;}
+         if (b < 0){b = 0;}
+         if (r > originalCol.get(i).getRed()){r = originalCol.get(i).getRed() ;}
+         if (g > originalCol.get(i).getGreen()){g = originalCol.get(i).getGreen() ;}
+         if (b > originalCol.get(i).getBlue()){b = originalCol.get(i).getBlue() ;}
+       //  System.out.println(r +" "+ g+" " +b);
+         cl = new Color(r,g,b);
+            this.shades.set(i, cl);
+         i++;
         }
+        
     }
 
     public void unhide() {
         this.hides = false;
+        this.elight = false;
     }
 
     /**
@@ -101,7 +136,7 @@ public class Data {
     public void hide() {
         hides = true;
         for (int i = 0; i < this.planes; i++) {
-            this.shades.add(i, Color.WHITE);
+            this.originalCol.set(i,Color.WHITE);
         }
     }
 
@@ -112,7 +147,7 @@ public class Data {
         hides = true;
         cl = new Color(r, g, b);
         for (int i = 0; i < this.planes; i++) {
-            this.shades.set(i, cl);
+            this.originalCol.set(i,cl);
         }
     }
 
@@ -166,7 +201,7 @@ public class Data {
         translate(1,oldposx);
         translate(2,oldposy);
         translate(3,oldposz);
-       // setlight(light);
+        if (elight == true){ setlight(light); }
     }
 
     /**
@@ -215,7 +250,7 @@ public class Data {
             body.remove(i);
             body.put(i, each);
         }
-
+        if (elight == true){ setlight(light); }
     }
 
     void dispose() {
@@ -226,6 +261,8 @@ public class Data {
         planes = 0;
         body = new HashMap<Integer, Point>();
         plochy = new ArrayList<ArrayList<Integer>>();
+        shades = new ArrayList<Color>();
+        originalCol = new ArrayList<Color>();
         isrendered = false;
         hides = false;
         posx = 0;

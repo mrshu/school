@@ -244,7 +244,7 @@ public class Main {
                 int x = Integer.parseInt(fieldx.getText());
                 int y = Integer.parseInt(fieldy.getText());
                 int z = Integer.parseInt(fieldz.getText());
-                Point tosend = new Point(x,y,z);
+                Point tosend = new Point(-x,-y,-z);
                 data.setlight(tosend);
                 repaint();
             }

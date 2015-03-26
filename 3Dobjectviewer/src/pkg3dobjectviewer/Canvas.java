@@ -50,6 +50,7 @@ public class Canvas extends JPanel {
                     float[] normal = { vectorA[1]*vectorB[2] - vectorA[2]*vectorB[1] ,
                                        vectorA[2]*vectorB[0] - vectorA[0]*vectorB[2] ,
                                        vectorA[0]*vectorB[1] - vectorA[1]*vectorB[0]     };
+                    
                     if (normal[2]>=0){
                         g.setColor(data.getPlaneColor(i));
                         g.fillPolygon(xs, ys, body.size());
