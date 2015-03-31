@@ -36,10 +36,10 @@ void *read_to_buff(void *data){
 	      buffer_1_dat +=readed;
 	      reading_to = 2;
 	      if (readed == 0){ 
-		done = true;
-		pthread_mutex_unlock(&lock);
-		pthread_cond_signal(&cond_write);
-		pthread_exit(NULL);
+		  done = true;
+		  pthread_mutex_unlock(&lock);
+		  pthread_cond_signal(&cond_write);
+		  pthread_exit(NULL);
 	      }
 	      pthread_cond_signal(&cond_write);
 	      break;
@@ -52,10 +52,10 @@ void *read_to_buff(void *data){
 	      buffer_2_dat +=readed;
 	      reading_to = 1;
 	      if (readed == 0){ 
-		done = true;
-		pthread_mutex_unlock(&lock);
-		pthread_cond_signal(&cond_write);
-		pthread_exit(NULL);
+		  done = true;
+		  pthread_mutex_unlock(&lock);
+		  pthread_cond_signal(&cond_write);
+		  pthread_exit(NULL);
 	      }
 	      pthread_cond_signal(&cond_write);
 	      break;
@@ -71,17 +71,22 @@ void *read_to_buff(void *data){
 
 void *print_from_buff(void *data){
     int wrote;
+    int add;
     while(true){
 	pthread_mutex_lock(&lock);
 	switch (writing_from){
 	  case 1:{
 	      while ( buffer_1_dat == 0  && done  == false){ 
-		  pthread_cond_wait(&cond_write, &lock);
+		    pthread_cond_wait(&cond_write, &lock);
 		  }
-	      while (buffer_1_dat != 0){
 		  wrote = write(1, buffer_1, buffer_1_dat);  
-		  buffer_1_dat = buffer_1_dat -wrote;
-	      }
+		  if (wrote == -1){ printf("Error printing\n" ); }
+		  while (buffer_1_dat != wrote){
+		    add= write(1, &buffer_1[wrote], buffer_1_dat-wrote);
+		    if (add== -1){ printf("Error printing\n" ); break; }
+		    wrote+=add;
+		  }
+		  buffer_1_dat = 0;
 	      writing_from = 2;
 	      pthread_cond_signal(&cond_read);
 	      break;
@@ -90,16 +95,20 @@ void *print_from_buff(void *data){
 	  case 2:{
 	      while( buffer_2_dat == 0  && done == false){
 		  pthread_cond_wait(&cond_write, &lock);
-	      }
-	      while (buffer_2_dat != 0){
+		}
 		  wrote = write(1, buffer_2, buffer_2_dat); 
-		  buffer_2_dat = buffer_2_dat - wrote;	
-	      }
+		  if (wrote == -1){ printf("Error printing\n" ); }
+		  while (buffer_2_dat != wrote){
+		    add = write(1, &buffer_2[wrote], buffer_2_dat-wrote);
+		    if (add == -1){ printf("Error printing\n" );  break;}
+		    wrote+=add;
+		  }
+		  buffer_2_dat = 0;	  
 	      writing_from = 1;
 	      pthread_cond_signal(&cond_read);
 	      break;
 	    }
-	  }
+	  }  
 	if (done == true){ // (wrote == 0)  didn't work, don't have a clue why
 	    pthread_mutex_unlock(&lock);
 	    pthread_exit(NULL);
