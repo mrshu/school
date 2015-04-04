@@ -42,11 +42,11 @@ int checkRoman(string vyr){
     int streak = 0;
     int actual;
     bool special =false;
-    for(int i = 0 ; i<vyr1.length(); i++){
-      if ( last == vyr1.at(i) ){ streak++ ;}
+    for(int i = 0 ; i<vyr.length(); i++){
+      if ( last == vyr.at(i) ){ streak++ ;}
       else{ streak = 0; }
       if ( streak == 3 ) { return -1; }
-      actual = rmap.at(vyr1.at(i));
+      actual = rmap.at(vyr.at(i));
       
       if ( actual > lastval && lastval != -1){
 	double ratio = lastval / actual;
@@ -59,7 +59,7 @@ int checkRoman(string vyr){
 	}
       else { special = false;}
       
-      last = vyr1.at(i);
+      last = vyr.at(i);
       lastval = actual;
     }
   return 0;
