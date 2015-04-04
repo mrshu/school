@@ -144,7 +144,7 @@ int RIMSKA_KALKULACKA::konverziaRimskych(const string &rimskeCislo) {
   for(int  i = 0; i<rimskeCislo.length(); i++){
     actual = rmap.at(rimskeCislo.at(i));
     acc+=actual;
-    if( lastval < actual ){ acc -= lastval;   }
+    if( lastval < actual ){ acc -= 2*lastval;   }
     lastval = actual;
   }
   return acc;
