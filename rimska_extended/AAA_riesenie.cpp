@@ -1,6 +1,6 @@
 #include <iostream>
 #include <sstream>
-
+#include<map>
 using namespace std;
 
 //#include "riesenie.h"
@@ -12,6 +12,58 @@ using namespace std;
 
 #define special(kolko,Rimska,out)   if (cislo >= kolko) {  out = out + Rimska;   cislo -= kolko;}
 
+std::map<char, int> rmap = {
+  { 'O', 0},
+  { 'I', 1},
+  { 'V', 5},
+  { 'X', 10},
+  { 'L', 50},
+  { 'C', 100},
+  { 'D', 500},
+  { 'M', 1000},
+  { 'P', 5000},
+  { 'Q', 10000},
+  { 'R', 50000},
+  { 'S', 100000},
+  { 'T', 500000},
+  { 'U', 1000000},
+  { 'W', 5000000},
+  { 'Y', 10000000},
+  { 'Z', 50000000},
+  { 'E', 100000000},
+  { 'F', 500000000},
+  { 'G', 1000000000}
+};
+
+
+int checkRoman(string vyr){
+    char last = 'A';
+    int lastval = -1;
+    int streak = 0;
+    int actual;
+    bool special =false;
+    for(int i = 0 ; i<vyr1.length(); i++){
+      if ( last == vyr1.at(i) ){ streak++ ;}
+      else{ streak = 0; }
+      if ( streak == 3 ) { return -1; }
+      actual = rmap.at(vyr1.at(i));
+      
+      if ( actual > lastval && lastval != -1){
+	double ratio = lastval / actual;
+	if ( ratio == 5 || ratio == 10) { 
+	  if (special == true){ return -1; }
+	  special = true;
+	  continue; 
+	  }
+	  else{ return -1; }
+	}
+      else { special = false;}
+      
+      last = vyr1.at(i);
+      lastval = actual;
+    }
+  return 0;
+}
 
 class RIMSKA_KALKULACKA {
   int konverziaRimskych(const string &rimskeCislo);
@@ -46,14 +98,14 @@ string RIMSKA_KALKULACKA::kalkulackaRimska(const string &vyr) {
 	if ( vyr.at(i) == '-'  &&  zap_2 == true  ){ return ZLY_VYRAZ;  } 					// chcecks -- of second argument  
 	
         if (vyr.at(i) == '+'||  vyr.at(i) == '-' || vyr.at(i) == '/' || vyr.at(i) == '*' || vyr.at(i) == '>'  || vyr.at(i) == '<' || vyr.at(i) == '=' || vyr.at(i) == '&' || vyr.at(i) == '|'){
-	    if (got_first_letter == false){return ZLY_VYRAZ} 							// checks for existence of first argument
+	    if (got_first_letter == false){return ZLY_VYRAZ;} 							// checks for existence of first argument
             if (found_operator == true){return ZLY_VYRAZ;}							// checks for double argument
             op = vyr.at(i);
             found_operator = true;
             continue;
             }
              
-        if ( vyr.at(i) == 'I' || vyr.at(i) == 'V' || vyr.at(i) == 'X' || vyr.at(i) == 'L'  || vyr.at(i) == 'C'  || vyr.at(i) == 'D'  || vyr.at(i) == 'M' || vyr.at(i) == 'P' || vyr.at(i) == 'Q' || vyr.at(i) == 'R' || vyr.at(i) == 'S' || vyr.at(i) == 'T' || vyr.at(i) == 'U' || vyr.at(i) == 'W'|| vyr.at(i) == 'Y' || vyr.at(i) == 'Z'|| vyr.at(i) == 'E' || vyr.at(i) == 'F' || vyr.at(i) == 'G')  {
+        if ( vyr.at(i) == 'I' || vyr.at(i) == 'V' || vyr.at(i) == 'X' || vyr.at(i) == 'L'  || vyr.at(i) == 'C'  || vyr.at(i) == 'D'  || vyr.at(i) == 'M' || vyr.at(i) == 'P' || vyr.at(i) == 'Q' || vyr.at(i) == 'R' || vyr.at(i) == 'S' || vyr.at(i) == 'T' || vyr.at(i) == 'U' || vyr.at(i) == 'W'|| vyr.at(i) == 'Y' || vyr.at(i) == 'Z'|| vyr.at(i) == 'E' || vyr.at(i) == 'F' || vyr.at(i) == 'G' || vyr.at(i)=='O' )  {
 	    got_first_letter =true;
             stringstream ss;
             char c;
@@ -66,33 +118,39 @@ string RIMSKA_KALKULACKA::kalkulackaRimska(const string &vyr) {
             }
         else{ return ZLY_VYRAZ;}
         }
+        if (op == 'N') {return ZLY_VYRAZ;}
         
-    // TODO -------------------------------------------------
-    // check corectness of roman number
-    char last = 'A';
-    int streak = 0;
-    for(int i = 0 ; i<vyr1.length(); i++){
+    int check = checkRoman(vyr1);
+    check += checkRoman(vyr2);
+    if (check != 0) {return ZLY_VYRAZ;}
       
-    }
-    for(int i = 0 ; i<vyr2.length(); i++){
-      
-    }
-    // -------------------------------------------------
     if (found_operator == false){return ZLY_VYRAZ;}
     int cis1= konverziaRimskych(vyr1);
     if (zap_1 == true) {cis1 = -cis1; }
     int cis2=konverziaRimskych(vyr2);
     if (zap_2 == true) {cis2 = -cis2; }
-    if (cis2 == 0 && op = '/'){ return CISLO_MIMO; }
+    if (cis2 == 0 && op == '/'){ return CISLO_MIMO; }
     int result = kalkulackaArabska(op,cis1,cis2);
     string toret = konvertNaRimske(result);
   return toret;
 }
 
+
+
 int RIMSKA_KALKULACKA::konverziaRimskych(const string &rimskeCislo) {
-  //TODO sum of roman literals
-  return DUMMY_INT;
+  int acc = 0;
+  int actual;
+  int lastval = 0;
+  for(int  i = 0; i<rimskeCislo.length(); i++){
+    actual = rmap.at(rimskeCislo.at(i));
+    acc+=actual;
+    if( lastval < actual ){ acc -= lastval;   }
+    lastval = actual;
+  }
+  return acc;
 }
+
+
 
 
 string RIMSKA_KALKULACKA::konvertNaRimske(int cislo) {
@@ -101,7 +159,6 @@ string RIMSKA_KALKULACKA::konvertNaRimske(int cislo) {
   }
 
   string out = "";
-
   if (cislo == 0) {
     return "O";
   }
