@@ -41,7 +41,7 @@ int checkRoman(string vyr){
     int lastval = -1;
     int streak = 0;
     int actual;
-    bool special =false;
+    bool spcase =false;
     for(int i = 0 ; i<vyr.length(); i++){
       if ( last == vyr.at(i) ){ streak++ ;}
       else{ streak = 0; }
@@ -49,15 +49,15 @@ int checkRoman(string vyr){
       actual = rmap.at(vyr.at(i));
       
       if ( actual > lastval && lastval != -1){
-	double ratio = lastval / actual;
+	double ratio =  actual / lastval;
 	if ( ratio == 5 || ratio == 10) { 
-	  if (special == true){ return -1; }
-	  special = true;
+	  if (spcase == true){ return -1; }
+	  spcase = true;
 	  continue; 
 	  }
 	  else{ return -1; }
 	}
-      else { special = false;}
+      else { spcase = false;}
       
       last = vyr.at(i);
       lastval = actual;
@@ -161,6 +161,11 @@ string RIMSKA_KALKULACKA::konvertNaRimske(int cislo) {
   string out = "";
   if (cislo == 0) {
     return "O";
+  }
+  
+  if (cislo < 0){ 
+    out = out +"-" ;
+    cislo = cislo *-1;
   }
 
   odcitaj(1000000000, "G", out);
