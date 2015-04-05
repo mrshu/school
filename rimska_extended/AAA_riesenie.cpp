@@ -25,7 +25,7 @@ int checkRoman(string vyr){
       else{ streak = 0; }
       if ( streak == 3 ) { return -1; }
       actual = rmap.at(vyr.at(i));
-      
+      if (actual == 0 && vyr.length() != 1){return -1;}
       if ( vyr.at(i) == last){
 	if ( last == 'V'|| last == 'L' || last == 'D' || last == 'P' || last == 'R' || last == 'T' || last == 'W' || last == 'Z' || last == 'F'){return -1;}
       } 
@@ -53,9 +53,9 @@ int checkRoman(string vyr){
 }
 
 class RIMSKA_KALKULACKA {
-  int konverziaRimskych(const string &rimskeCislo);
-  string konvertNaRimske(int cislo);
-  int kalkulackaArabska(char oper, int op1, int op2);
+  long long int konverziaRimskych(const string &rimskeCislo);
+  string konvertNaRimske( long long int cislo);
+  long long int kalkulackaArabska(char oper, long long int op1, long long int op2);
  public:
   string kalkulackaRimska(const string &vyraz);
 };
@@ -132,20 +132,20 @@ string RIMSKA_KALKULACKA::kalkulackaRimska(const string &vyr) {
     if (check != 0) {return ZLY_VYRAZ;}
       
     if (found_operator == false){return ZLY_VYRAZ;}
-    int cis1= konverziaRimskych(vyr1);
+    long long int cis1= konverziaRimskych(vyr1);
     if (zap_1 == true) {cis1 = -cis1; }
-    int cis2=konverziaRimskych(vyr2);
+    long long int cis2=konverziaRimskych(vyr2);
     if (zap_2 == true) {cis2 = -cis2; }
     if (cis2 == 0 && op == '/'){ return CISLO_MIMO; }
-    int result = kalkulackaArabska(op,cis1,cis2);
+    long long int result = kalkulackaArabska(op,cis1,cis2);
     string toret = konvertNaRimske(result);
   return toret;
 }
 
 
 
-int RIMSKA_KALKULACKA::konverziaRimskych(const string &rimskeCislo) {
-  int acc = 0;
+long long int RIMSKA_KALKULACKA::konverziaRimskych(const string &rimskeCislo) {
+  long long int acc = 0;
   int actual;
   int lastval = 0;
   for(int  i = 0; i<rimskeCislo.length(); i++){
@@ -160,7 +160,7 @@ int RIMSKA_KALKULACKA::konverziaRimskych(const string &rimskeCislo) {
 
 
 
-string RIMSKA_KALKULACKA::konvertNaRimske(int cislo) {
+string RIMSKA_KALKULACKA::konvertNaRimske( long long int cislo) {
   if(cislo<=-4000000000ll || cislo>=4000000000ll){
       return CISLO_MIMO;
   }
@@ -235,7 +235,7 @@ string RIMSKA_KALKULACKA::konvertNaRimske(int cislo) {
 }
 
 
-int RIMSKA_KALKULACKA::kalkulackaArabska(char oper, int op1, int op2) {
+ long long int RIMSKA_KALKULACKA::kalkulackaArabska(char oper, long long int op1,long long int op2) {
     if(oper == '+'){ return (op1 + op2) ;}
     if(oper == '-'){ return (op1 - op2) ;}
     if(oper == '*'){ return (op1 * op2) ;}
@@ -254,13 +254,12 @@ int RIMSKA_KALKULACKA::kalkulackaArabska(char oper, int op1, int op2) {
 	}
 	
     if(oper == '&'){ 
-      if (op1 == 1 && op2 == 1){ return 1; }
+      if (op1 > 0 && op2 > 0){ return 1; }
       else { return 0; }
     } 
     if(oper == '|'){
-      if (op1 == 1 || op2 == 1){ return 1; }
+      if (op1 > 0 || op2 > 1){ return 1; }
       else { return 0; }
     }
   return DUMMY_INT;
 }
-
