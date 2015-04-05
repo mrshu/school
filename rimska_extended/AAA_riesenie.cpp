@@ -246,7 +246,13 @@ int RIMSKA_KALKULACKA::kalkulackaArabska(char oper, int op1, int op2) {
 	else 	{ return 0;}
 	}
 	
-    if(oper == '&'){ return 0 ;} // output should be 1 or 0 for any number, WTF?
-    if(oper == '|'){ return 1 ;} // 
+    if(oper == '&'){ 
+      if (op1 == 1 && op2 == 1){ return 1; }
+      else { return 0; }
+    } // output should be 1 or 0 for any number, WTF?
+    if(oper == '|'){
+      if (op1 == 1 || op2 == 1){ return 1; }
+      else { return 0; }
+    }
   return DUMMY_INT;
 }
