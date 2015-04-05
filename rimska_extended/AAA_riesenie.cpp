@@ -12,29 +12,7 @@ using namespace std;
 
 #define special(kolko,Rimska,out)   if (cislo >= kolko) {  out = out + Rimska;   cislo -= kolko;}
 
-std::map<char, int> rmap = {
-  { 'O', 0},
-  { 'I', 1},
-  { 'V', 5},
-  { 'X', 10},
-  { 'L', 50},
-  { 'C', 100},
-  { 'D', 500},
-  { 'M', 1000},
-  { 'P', 5000},
-  { 'Q', 10000},
-  { 'R', 50000},
-  { 'S', 100000},
-  { 'T', 500000},
-  { 'U', 1000000},
-  { 'W', 5000000},
-  { 'Y', 10000000},
-  { 'Z', 50000000},
-  { 'E', 100000000},
-  { 'F', 500000000},
-  { 'G', 1000000000}
-};
-
+std::map<char, int> rmap ;
 
 int checkRoman(string vyr){
     char last = 'A';
@@ -47,6 +25,15 @@ int checkRoman(string vyr){
       else{ streak = 0; }
       if ( streak == 3 ) { return -1; }
       actual = rmap.at(vyr.at(i));
+      
+      if ( vyr.at(i) == last){
+	if ( last == 'V'|| last == 'L' || last == 'D' || last == 'P' || last == 'R' || last == 'T' || last == 'W' || last == 'Z' || last == 'F'){return -1;}
+      } 
+	
+       if (spcase == true){
+	int min2val = rmap.at(vyr.at(i-2));
+	if (min2val<=actual) {return -1;} 
+      }
       
       if ( actual > lastval && lastval != -1){
 	double ratio =  actual / lastval;
@@ -82,6 +69,26 @@ const string ZLY_VYRAZ = "Zly vstupny vyraz";
 #endif
 
 string RIMSKA_KALKULACKA::kalkulackaRimska(const string &vyr) {
+    rmap.insert ( std::pair<char,int>('O',0) );
+    rmap.insert ( std::pair<char,int>('I',1) );
+    rmap.insert ( std::pair<char,int>('V',5) );
+    rmap.insert ( std::pair<char,int>('X',10) );
+    rmap.insert ( std::pair<char,int>('L',50) );
+    rmap.insert ( std::pair<char,int>('C',100) );
+    rmap.insert ( std::pair<char,int>('D',500) );
+    rmap.insert ( std::pair<char,int>('M',1000) );
+    rmap.insert ( std::pair<char,int>('P',5000) );
+    rmap.insert ( std::pair<char,int>('Q',10000) );
+    rmap.insert ( std::pair<char,int>('R',50000) );
+    rmap.insert ( std::pair<char,int>('S',100000) );
+    rmap.insert ( std::pair<char,int>('T',500000) );
+    rmap.insert ( std::pair<char,int>('U',1000000) );
+    rmap.insert ( std::pair<char,int>('W',5000000) );
+    rmap.insert ( std::pair<char,int>('Y',10000000) );
+    rmap.insert ( std::pair<char,int>('Z',50000000) );
+    rmap.insert ( std::pair<char,int>('E',100000000) );
+    rmap.insert ( std::pair<char,int>('F',500000000) );
+    rmap.insert ( std::pair<char,int>('G',1000000000) );
     string vyr1 = "";
     char op = 'N';
     string vyr2= "";
@@ -94,7 +101,7 @@ string RIMSKA_KALKULACKA::kalkulackaRimska(const string &vyr) {
         
         if ( vyr.at(i) == '-'  && got_first_letter == false && zap_1 == false ){ zap_1 = true;  continue; } 	//chcecks - of  first argument
         if ( vyr.at(i) == '-'  && got_first_letter == false && zap_1 == true  ){ return ZLY_VYRAZ;  } 		// checks -- of first argument 
-        if ( vyr.at(i) == '-'  && found_operator == true && zap_2 == false) {zap_2 = true;  continue; }		// checks - of  second argument
+        if ( vyr.at(i) == '-'  && found_operator == true && zap_2 == false && vyr2=="") {zap_2 = true;  continue; }		// checks - of  second argument
 	if ( vyr.at(i) == '-'  &&  zap_2 == true  ){ return ZLY_VYRAZ;  } 					// chcecks -- of second argument  
 	
         if (vyr.at(i) == '+'||  vyr.at(i) == '-' || vyr.at(i) == '/' || vyr.at(i) == '*' || vyr.at(i) == '>'  || vyr.at(i) == '<' || vyr.at(i) == '=' || vyr.at(i) == '&' || vyr.at(i) == '|'){
@@ -119,7 +126,7 @@ string RIMSKA_KALKULACKA::kalkulackaRimska(const string &vyr) {
         else{ return ZLY_VYRAZ;}
         }
         if (op == 'N') {return ZLY_VYRAZ;}
-        
+        if (vyr2=="" ){return ZLY_VYRAZ;}
     int check = checkRoman(vyr1);
     check += checkRoman(vyr2);
     if (check != 0) {return ZLY_VYRAZ;}
@@ -154,7 +161,7 @@ int RIMSKA_KALKULACKA::konverziaRimskych(const string &rimskeCislo) {
 
 
 string RIMSKA_KALKULACKA::konvertNaRimske(int cislo) {
-  if(cislo<=-4000000000l || cislo>=4000000000l){
+  if(cislo<=-4000000000ll || cislo>=4000000000ll){
       return CISLO_MIMO;
   }
 
@@ -249,10 +256,11 @@ int RIMSKA_KALKULACKA::kalkulackaArabska(char oper, int op1, int op2) {
     if(oper == '&'){ 
       if (op1 == 1 && op2 == 1){ return 1; }
       else { return 0; }
-    } // output should be 1 or 0 for any number, WTF?
+    } 
     if(oper == '|'){
       if (op1 == 1 || op2 == 1){ return 1; }
       else { return 0; }
     }
   return DUMMY_INT;
 }
+
